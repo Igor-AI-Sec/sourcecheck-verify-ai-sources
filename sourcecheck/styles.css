@@ -1,0 +1,109 @@
+/* SourceCheck – style wstrzykiwane na chatgpt.com
+   Zasada: nie walczymy z motywem ChatGPT, tylko rysujemy własną, samowystarczalną kartę.
+   Kolory zdefiniowane tak, by były czytelne na jasnym i ciemnym tle. */
+
+.sourcecheck-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 5px 12px;
+  font-size: 12.5px;
+  font-family: inherit;
+  font-weight: 600;
+  color: #4b5563;
+  background: rgba(127, 127, 127, 0.08);
+  border: 1px solid rgba(127, 127, 127, 0.35);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.sourcecheck-btn:hover {
+  background: rgba(127, 127, 127, 0.18);
+  color: #111827;
+}
+.sourcecheck-btn:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+@media (prefers-color-scheme: dark) {
+  .sourcecheck-btn { color: #d1d5db; }
+  .sourcecheck-btn:hover { color: #f9fafb; }
+}
+
+.sourcecheck-report {
+  margin-top: 10px;
+  padding: 12px 14px;
+  border: 1px solid rgba(127, 127, 127, 0.3);
+  border-radius: 10px;
+  background: rgba(127, 127, 127, 0.06);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.sc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+.sc-title { font-weight: 700; }
+.sc-progress { font-variant-numeric: tabular-nums; opacity: 0.7; }
+
+.sc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sc-item {
+  display: flex;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border-left: 3px solid transparent;
+  background: rgba(127, 127, 127, 0.07);
+}
+.sc-item.sc-ok       { border-left-color: #16a34a; }
+.sc-item.sc-mismatch { border-left-color: #d97706; }
+.sc-item.sc-dead     { border-left-color: #dc2626; }
+.sc-item.sc-blocked  { border-left-color: #6b7280; }
+
+.sc-icon { flex: 0 0 auto; }
+.sc-body { min-width: 0; }
+
+.sc-url {
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  word-break: break-all;
+  text-decoration: none;
+  opacity: 0.9;
+}
+.sc-url:hover { text-decoration: underline; }
+
+.sc-pagetitle {
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.sc-note {
+  opacity: 0.75;
+  margin-top: 2px;
+}
+
+.sc-summary {
+  margin-top: 10px;
+  font-weight: 700;
+}
+
+.sc-footer {
+  margin-top: 8px;
+  font-size: 11px;
+  opacity: 0.55;
+}
+
+.sc-empty { opacity: 0.75; }
