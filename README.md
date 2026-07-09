@@ -4,6 +4,8 @@ A Chrome extension (Manifest V3) that checks, in one click, whether the links in
 
 **Everything runs locally in your browser. No server, no telemetry, nothing ever leaves your machine.**
 
+![SourceCheck in action](screenshots/demo.png)
+
 This is the tool behind the write-up ["I built a plugin to check whether AI makes up links. It went obsolete before I finished it"](https://open.substack.com/pub/igoraisec/p/i-built-a-plugin-to-check-whether) — see the `/data` folder for the raw test results discussed there.
 
 ## What it does
