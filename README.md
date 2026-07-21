@@ -6,7 +6,7 @@ A Chrome extension (Manifest V3) that checks, in one click, whether the links in
 
 ![SourceCheck in action](screenshots/demo.png)
 
-This is the tool behind the write-up ["I built a plugin to check whether AI makes up links. It went obsolete before I finished it"](https://open.substack.com/pub/igoraisec/p/i-built-a-plugin-to-check-whether) — see the `/data` folder for the raw test results discussed there.
+This is the tool behind two write-ups: ["I built a plugin to check whether AI makes up links. It went obsolete before I finished it"](https://open.substack.com/pub/igoraisec/p/i-built-a-plugin-to-check-whether), and the follow-up on testing a third language, ["I warned myself that no trace isn't proof of no searching. Then I caught it — Gemini, in German"](https://igoraisec.substack.com/p/i-warned-myself-that-no-trace-isnt) — see the `/data` folder for the raw test results discussed in both.
 
 ## What it does
 
