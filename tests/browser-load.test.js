@@ -62,7 +62,7 @@ test("check.js without its dependencies cannot check anything, so the load order
 
 test("content script order exposes everything content.js uses", () => {
   const files = manifest.content_scripts[0].js.filter((f) => f !== "content.js");
-  assert.deepEqual(files, ["lib/urls.js"]);
+  assert.deepEqual(files, ["lib/urls.js", "lib/providers.js"]);
   const lib = loadAsBrowser(files).SourceCheckLib;
   const used = new Set([...fs.readFileSync(path.join(EXT, "content.js"), "utf8").matchAll(/\blib\.(\w+)/g)].map((m) => m[1]));
   assert.ok(used.size >= 2, [...used].join(","));

@@ -116,7 +116,7 @@
 
   const BLOCK_TAGS = new Set(["P", "LI", "TD", "TH", "H1", "H2", "H3", "H4", "BLOCKQUOTE"]);
   const SKIP_TAGS = new Set(["SCRIPT", "STYLE", "NOSCRIPT", "TEMPLATE", "TEXTAREA"]);
-  const UI_CLASSES = ["sourcecheck-btn", "sourcecheck-report"];
+  const UI_CLASSES = ["sourcecheck-btn", "sourcecheck-report", "sourcecheck-slot"];
 
   function tagOf(n) {
     return String(n.tagName || "").toUpperCase();
@@ -312,6 +312,10 @@
     extractBareUrls,
     normalizeKey,
     textOf,
+    tagOf,
+    classOf,
+    isSourceCheckUi,
+    isSkipped,
     collectItems,
     isBlockedHost,
     checkTarget,

@@ -50,7 +50,7 @@ test("the service worker imports only files that exist", () => {
 
 test("content scripts load the shared library before content.js, only on the chat sites", () => {
   const [cs] = manifest.content_scripts;
-  assert.deepEqual(cs.js, ["lib/urls.js", "content.js"]);
+  assert.deepEqual(cs.js, ["lib/urls.js", "lib/providers.js", "content.js"]);
   assert.deepEqual(cs.matches.sort(), [
     "https://chat.openai.com/*",
     "https://chatgpt.com/*",

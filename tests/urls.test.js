@@ -36,6 +36,16 @@ test("SourceCheck button and report text are ignored", () => {
   assert.deepEqual(urlsOf(urls.collectItems(root)), [LONG]);
 });
 
+test("a SourceCheck slot holding the button and report is ignored as a whole", () => {
+  const slot = elem("div", [
+    elem("button", [text("Verify https://example.com/from-button")], { className: "sourcecheck-btn" }),
+    elem("div", [anchor("https://example.com/from-report"), text(" https://example.com/in-report")], { className: "sourcecheck-report" }),
+  ], { className: "sourcecheck-slot" });
+  const root = elem("div", [elem("p", [anchor("https://example.com/answer")]), slot]);
+  assert.deepEqual(urlsOf(urls.collectItems(root)), ["https://example.com/answer"]);
+  assert.equal(urls.isSourceCheckUi(slot), true);
+});
+
 test("second verification does not discover the shortened report URL ending in an ellipsis", () => {
   const LONG = "https://example.com/docs/" + "x".repeat(80);
   const shortened = LONG.slice(0, 77) + "…";

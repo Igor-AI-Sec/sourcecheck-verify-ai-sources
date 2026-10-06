@@ -19,7 +19,7 @@
         "https://gemini.google.com/*",
         "https://claude.ai/*"
       ],
-      "js": ["lib/urls.js", "content.js"],
+      "js": ["lib/urls.js", "lib/providers.js", "content.js"],
       "css": ["styles.css"],
       "run_at": "document_idle"
     }

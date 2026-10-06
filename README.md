@@ -45,7 +45,13 @@ What this cannot do: it does not understand negation or contradiction (a page sa
 
 ## Provider support
 
-`sourcecheck/content.js` has selectors for the ChatGPT, Claude and Gemini answer containers, and the manifest matches `chatgpt.com`, `chat.openai.com`, `claude.ai` and `gemini.google.com`. These sites change their markup without notice, and the selectors are not continuously tested against the live pages. The ChatGPT selector uses a semantic attribute; the Claude and Gemini selectors rely partly on class-name fragments and are the more likely to break. If the button does not appear, the selector probably needs updating.
+`sourcecheck/lib/providers.js` holds one set of rules each for ChatGPT, Claude and Gemini, and the manifest matches `chatgpt.com`, `chat.openai.com`, `claude.ai` and `gemini.google.com`. For every answer the rules return two things: the element the links are read from, and the place the button and report go, which are not always the same element.
+
+- ChatGPT: the answer is the `data-markdown-text-style="assistant-message"` element inside a turn whose `data-content-search-unit-key` ends in `:assistant`. The older `data-message-author-role="assistant"` attribute is used only if no such element exists.
+- Gemini: one `message-content` element is one answer. The button and report go into the content flow inside it, after the last rendered block, so they follow the answer column and not the full-width wrappers around it.
+- Claude: the outermost element with `data-testid="chat-message-content"` or a `font-claude` class, with the UI appended to it.
+
+These sites change their markup without notice, and the rules are not continuously tested against the live pages. The tests use simplified copies of the DOM structures. If the button does not appear or sits in the wrong place, the rules in `providers.js` probably need updating.
 
 ## Privacy
 
@@ -95,6 +101,7 @@ They cover URL extraction and dedupe, the status matrix with a mocked `fetch`, t
 | `sourcecheck/content.js` | Runs on the chat sites: finds answers, adds the button, draws the report |
 | `sourcecheck/background.js` | Service worker: wires the checker to the browser |
 | `sourcecheck/lib/urls.js` | Link extraction, dedupe and the local/private target guard |
+| `sourcecheck/lib/providers.js` | Per-provider rules: which element is an answer and where the UI goes |
 | `sourcecheck/lib/score.js` | The keyword-overlap heuristic and HTML text helpers |
 | `sourcecheck/lib/check.js` | Per-link status logic, batch limits, message validation |
 | `sourcecheck/styles.css` | Button and report styling |

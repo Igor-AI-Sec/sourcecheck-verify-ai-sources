@@ -6,8 +6,21 @@ function text(value) {
   return { nodeType: 3, nodeValue: value };
 }
 
+// `props.attrs` holds HTML attributes (data-*, role, ...) readable through
+// getAttribute(). Children get a parentElement pointer, as real DOM nodes have.
 function elem(tagName, children = [], props = {}) {
-  return { nodeType: 1, tagName: tagName.toUpperCase(), className: "", childNodes: children, ...props };
+  const { attrs = {}, ...rest } = props;
+  const node = {
+    nodeType: 1,
+    tagName: tagName.toUpperCase(),
+    className: "",
+    childNodes: children,
+    parentElement: null,
+    getAttribute: (name) => (Object.prototype.hasOwnProperty.call(attrs, name) ? attrs[name] : null),
+    ...rest,
+  };
+  for (const c of children) if (c.nodeType === 1) c.parentElement = node;
+  return node;
 }
 
 function anchor(href, label) {

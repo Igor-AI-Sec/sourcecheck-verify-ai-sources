@@ -7,25 +7,17 @@
   "use strict";
 
   const lib = globalThis.SourceCheckLib;
-  if (!lib || !lib.collectItems) return;
+  if (!lib || !lib.collectItems || !lib.findAssistantTargets || !lib.slotGridColumn) return;
 
-  // Each chat site has its own DOM. The assistant-message selector is picked by
-  // host. Semantic attributes are preferred over CSS class names, but provider
-  // markup changes without notice, so these selectors are not guaranteed to
-  // match the current production pages.
+  // Which element is an assistant answer, and where the UI goes, is decided per
+  // provider in lib/providers.js (loaded before this file). Provider markup
+  // changes without notice, so that logic is not guaranteed to match the
+  // current production pages.
   const HOST = location.hostname;
-
-  let ASSISTANT_SELECTOR;
-  if (HOST.includes("gemini.google.com")) {
-    ASSISTANT_SELECTOR = "message-content, .model-response-text, [class*='response-container-content']";
-  } else if (HOST.includes("claude.ai")) {
-    ASSISTANT_SELECTOR = "[data-testid='chat-message-content'], div[class*='font-claude']";
-  } else {
-    ASSISTANT_SELECTOR = '[data-message-author-role="assistant"]';
-  }
 
   const BTN_CLASS = "sourcecheck-btn";
   const REPORT_CLASS = "sourcecheck-report";
+  const SLOT_CLASS = "sourcecheck-slot";
   const WATCHDOG_MS = 90000; // re-enable the button if the worker never answers
 
   let requestCounter = 0;
@@ -50,26 +42,69 @@
 
   // ---------- button ----------
 
-  function addButtonTo(messageEl) {
-    // The button itself is the marker. If the page re-renders the answer and the
-    // button disappears, the next scan adds a new one.
-    if (messageEl.querySelector("." + BTN_CLASS)) return;
+  // Makes sure one answer has exactly one button in the right place. `target` is
+  // { extractionRoot, insertion: { parent, before } } from findAssistantTargets().
+  // The button itself is the marker: if the page re-renders the answer and the
+  // button disappears, the next scan adds a new one. If streaming content pushes
+  // the button away from its place, the next scan moves it (and its report) back.
+  function ensureUi(target) {
+    const root = target.extractionRoot;
+    const { parent, before } = target.insertion;
 
-    const btn = el("button", BTN_CLASS, "⛨ Verify sources");
-    btn.type = "button";
-    btn.title = "Check whether the links in this answer respond. Requests go directly from your browser to each site.";
-    btn.addEventListener("click", () => onVerifyClick(messageEl, btn));
-    messageEl.appendChild(btn);
+    let btn = root.querySelector("." + BTN_CLASS);
+    if (!btn) {
+      btn = el("button", BTN_CLASS, "⛨ Verify sources");
+      btn.type = "button";
+      btn.title = "Check whether the links in this answer respond. Requests go directly from your browser to each site.";
+      btn.addEventListener("click", () => onVerifyClick(root, btn));
+    }
+    const report = root.querySelector("." + REPORT_CLASS);
+
+    if (target.insertion.slot) {
+      placeInSlot(target, btn, report);
+      return;
+    }
+
+    const last = report || btn;
+    const inPlace =
+      btn.parentElement === parent && last.nextElementSibling === before && (!report || btn.nextElementSibling === report);
+    if (inPlace) return;
+    parent.insertBefore(btn, before);
+    if (report) parent.insertBefore(report, before);
   }
 
-  function onVerifyClick(messageEl, btn) {
+  // Slot mode (Gemini): the button and the report live together in one wrapper
+  // element, so they are a single item in the page's content flow and always share
+  // its column. The wrapper takes the same grid column as the last content block.
+  function placeInSlot(target, btn, report) {
+    const { parent, before, anchor } = target.insertion;
+    let slot = target.extractionRoot.querySelector("." + SLOT_CLASS);
+    if (!slot) slot = el("div", SLOT_CLASS);
+
+    if (btn.parentElement !== slot) slot.insertBefore(btn, slot.firstChild);
+    if (report && (report.parentElement !== slot || btn.nextElementSibling !== report)) slot.insertBefore(report, btn.nextSibling);
+
+    const column = anchor ? lib.slotGridColumn(getComputedStyle(parent).display, getComputedStyle(anchor)) : null;
+    if (column) {
+      slot.style.gridColumnStart = column.start;
+      slot.style.gridColumnEnd = column.end;
+    } else {
+      slot.style.removeProperty("grid-column-start");
+      slot.style.removeProperty("grid-column-end");
+    }
+
+    if (slot.parentElement !== parent || slot.nextElementSibling !== before) parent.insertBefore(slot, before);
+  }
+
+  // `root` is the answer's extraction root: links are read only from inside it.
+  function onVerifyClick(root, btn) {
     // Drop any earlier report first. collectItems() also ignores SourceCheck's
     // own button and report, so they can never become input to a new run.
-    messageEl.querySelectorAll("." + REPORT_CLASS).forEach((n) => n.remove());
-    const items = lib.collectItems(messageEl);
+    root.querySelectorAll("." + REPORT_CLASS).forEach((n) => n.remove());
+    const items = lib.collectItems(root);
 
     const report = el("div", REPORT_CLASS);
-    messageEl.appendChild(report);
+    btn.after(report);
 
     if (items.length === 0) {
       report.appendChild(
@@ -225,10 +260,7 @@
   // ---------- watching the page for new answers ----------
 
   function scan() {
-    const all = [...document.querySelectorAll(ASSISTANT_SELECTOR)];
-    // Providers nest matching elements, which would add several buttons to one
-    // answer. Only the outermost match is used.
-    all.filter((n) => !all.some((other) => other !== n && other.contains(n))).forEach(addButtonTo);
+    lib.findAssistantTargets(document.body, HOST).forEach(ensureUi);
   }
 
   const observer = new MutationObserver(() => {
