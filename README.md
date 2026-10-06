@@ -6,6 +6,8 @@ SourceCheck has no developer-operated server and sends no telemetry. The checkin
 
 ![SourceCheck in action](screenshots/demo.png)
 
+*Screenshot from the v0.6 test run. Version 0.7.0 uses the revised status and matching rules described below.*
+
 This is the tool behind two write-ups: ["I built a plugin to check whether AI makes up links. It went obsolete before I finished it"](https://open.substack.com/pub/igoraisec/p/i-built-a-plugin-to-check-whether), and a follow-up that adds a third language (Gemini, in German) and a note on the difference between "no trace of search" and "did not search" ([link](https://igoraisec.substack.com/p/i-warned-myself-that-no-trace-isnt)). The `/data` folder holds the raw test results behind both. Read [data/README.md](data/README.md) for what those files do and do not let you reconstruct.
 
 ## What it does
