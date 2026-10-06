@@ -1,0 +1,14 @@
+node_modules/
+npm-debug.log*
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.vscode/
+.idea/
+
+# local scratch
+tmp/
+*.log

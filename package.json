@@ -1,0 +1,13 @@
+{
+  "name": "sourcecheck-verify-ai-sources",
+  "version": "0.7.0",
+  "private": true,
+  "description": "Chrome extension that checks whether links in AI answers respond. Test tooling only; the extension has no runtime dependencies.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test \"tests/*.test.js\""
+  }
+}

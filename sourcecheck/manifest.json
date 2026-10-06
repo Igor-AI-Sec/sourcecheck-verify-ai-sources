@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "SourceCheck – Verify AI Sources",
-  "version": "0.6.0",
-  "description": "One click checks whether the links and sources in an AI answer actually exist. 100% local — nothing ever leaves your browser.",
+  "version": "0.7.0",
+  "description": "Checks whether links in AI answers respond and overlap the nearby text. No developer server, no telemetry.",
   "permissions": [],
   "host_permissions": [
     "http://*/*",
@@ -19,7 +19,7 @@
         "https://gemini.google.com/*",
         "https://claude.ai/*"
       ],
-      "js": ["content.js"],
+      "js": ["lib/urls.js", "lib/providers.js", "content.js"],
       "css": ["styles.css"],
       "run_at": "document_idle"
     }

@@ -1,6 +1,6 @@
-/* SourceCheck – style wstrzykiwane na chatgpt.com
-   Zasada: nie walczymy z motywem ChatGPT, tylko rysujemy własną, samowystarczalną kartę.
-   Kolory zdefiniowane tak, by były czytelne na jasnym i ciemnym tle. */
+/* SourceCheck styles, injected on the chat sites.
+   The report is a self-contained card that does not try to follow each site's
+   theme. Colors are chosen to stay readable on light and dark backgrounds. */
 
 .sourcecheck-btn {
   display: inline-flex;
@@ -29,6 +29,11 @@
 @media (prefers-color-scheme: dark) {
   .sourcecheck-btn { color: #d1d5db; }
   .sourcecheck-btn:hover { color: #f9fafb; }
+}
+
+.sourcecheck-slot {
+  display: block;
+  min-width: 0;
 }
 
 .sourcecheck-report {
@@ -70,7 +75,7 @@
 .sc-item.sc-ok       { border-left-color: #16a34a; }
 .sc-item.sc-mismatch { border-left-color: #d97706; }
 .sc-item.sc-dead     { border-left-color: #dc2626; }
-.sc-item.sc-blocked  { border-left-color: #6b7280; }
+.sc-item.sc-unverifiable { border-left-color: #6b7280; }
 
 .sc-icon { flex: 0 0 auto; }
 .sc-body { min-width: 0; }
@@ -98,6 +103,17 @@
 .sc-summary {
   margin-top: 10px;
   font-weight: 700;
+}
+
+.sc-skipped {
+  margin-top: 8px;
+  font-size: 12px;
+}
+.sc-skipped-list {
+  margin: 4px 0 0;
+  padding-left: 18px;
+  word-break: break-all;
+  opacity: 0.8;
 }
 
 .sc-footer {
